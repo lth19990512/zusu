@@ -112,16 +112,16 @@ export function Header() {
 
           {/* User menu (desktop) */}
           <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <button className="hidden md:flex items-center justify-center w-9 h-9 rounded-full border border-black/10 hover:bg-muted transition-colors">
+            <DropdownMenuTrigger>
+              <div className="hidden md:flex items-center justify-center w-9 h-9 rounded-full border border-black/10 hover:bg-muted transition-colors cursor-pointer">
                 <User className="size-4 text-foreground/70" />
-              </button>
+              </div>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-48">
-              <DropdownMenuItem asChild>
+              <DropdownMenuItem>
                 <Link href="/login" className="w-full">{t("login")}</Link>
               </DropdownMenuItem>
-              <DropdownMenuItem asChild>
+              <DropdownMenuItem>
                 <Link href="/register" className="w-full">{t("register")}</Link>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
@@ -134,10 +134,10 @@ export function Header() {
 
           {/* Mobile menu */}
           <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
-            <SheetTrigger asChild>
-              <button className="md:hidden text-foreground/70">
+            <SheetTrigger>
+              <div className="md:hidden text-foreground/70 cursor-pointer">
                 <Menu className="size-6" />
-              </button>
+              </div>
             </SheetTrigger>
             <SheetContent side="right" className="bg-background">
               <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
