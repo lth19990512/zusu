@@ -55,9 +55,6 @@ export function Footer() {
               <Link href="/posts" className="hover:text-foreground transition-colors">
                 {nav("community")}
               </Link>
-              <Link href="/news" className="hover:text-foreground transition-colors">
-                {nav("news")}
-              </Link>
             </nav>
           </div>
 

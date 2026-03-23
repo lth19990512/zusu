@@ -2,14 +2,13 @@
 
 import { useTranslations } from "next-intl";
 import { Link, usePathname } from "@/i18n/navigation";
-import { Home, Trophy, Users, MessageSquare, Newspaper } from "lucide-react";
+import { Home, Trophy, Users, MessageSquare } from "lucide-react";
 
 const navItems = [
   { href: "/", icon: Home, labelKey: "home" },
   { href: "/games", icon: Trophy, labelKey: "games" },
   { href: "/teams", icon: Users, labelKey: "teams" },
   { href: "/posts", icon: MessageSquare, labelKey: "community" },
-  { href: "/news", icon: Newspaper, labelKey: "news" },
 ] as const;
 
 export function MobileNav() {

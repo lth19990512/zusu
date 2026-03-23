@@ -79,7 +79,7 @@ export default async function GamesPage() {
           ))}
         </div>
       ) : (
-        <EmptyState icon="trophy" title={locale === "zh-TW" ? "目前沒有賽事資料" : "No game data available"} description={locale === "zh-TW" ? "免費 API 僅提供上一賽季資料，升級付費方案後即可同步即時賽事" : "Free API only provides last season data. Upgrade for live game sync."} />
+        <EmptyState icon="trophy" title={locale === "zh-TW" ? "今日暫無賽事・查看近期賽程" : "No games scheduled today"} />
       )}
     </div>
   );

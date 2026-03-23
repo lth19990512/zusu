@@ -25,7 +25,6 @@ import { cn } from "@/lib/utils";
 
 const navItems = [
   { key: "games", href: "/games" },
-  { key: "news", href: "/news" },
   { key: "teams", href: "/teams" },
   { key: "community", href: "/posts" },
 ] as const;

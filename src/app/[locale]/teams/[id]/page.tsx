@@ -7,6 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card } from "@/components/ui/card";
 import { RosterTable } from "@/components/teams/roster-table";
 import { notFound } from "next/navigation";
+import { Link } from "@/i18n/navigation";
 
 const homeTeams = alias(teams, "homeTeams");
 const awayTeams = alias(teams, "awayTeams");
@@ -136,8 +137,11 @@ export default async function TeamPage({
             {t("board")}
           </h3>
           <p className="text-sm text-muted-foreground">
-            {locale === "zh-TW" ? "社群功能開發中" : "Coming in Phase 2"}
+            {locale === "zh-TW" ? "還沒有討論・聊聊你的看法？" : "No discussions yet — share your thoughts?"}
           </p>
+          <Link href={`/posts/new?teamId=${id}`} className="text-xs text-primary font-semibold hover:underline">
+            {locale === "zh-TW" ? "發起討論 →" : "Start Discussion →"}
+          </Link>
         </Card>
       </div>
 
@@ -212,18 +216,23 @@ export default async function TeamPage({
           ) : (
             <p className="text-sm text-muted-foreground p-4">
               {locale === "zh-TW"
-                ? "目前沒有賽程資料。免費 API 僅提供上一賽季資料。"
-                : "No schedule data. Free API only provides last season data."}
+                ? "目前沒有賽程資料"
+                : "No schedule data available"}
             </p>
           )}
         </TabsContent>
 
         <TabsContent value="board">
-          <p className="text-sm text-muted-foreground p-4">
-            {locale === "zh-TW"
-              ? "討論區功能開發中（Phase 2）"
-              : "Discussion board coming in Phase 2"}
-          </p>
+          <div className="p-4 space-y-2">
+            <p className="text-sm text-muted-foreground">
+              {locale === "zh-TW"
+                ? "還沒有討論・聊聊你的看法？"
+                : "No discussions yet — share your thoughts?"}
+            </p>
+            <Link href={`/posts/new?teamId=${id}`} className="inline-block px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-semibold hover:brightness-110 transition-all">
+              {locale === "zh-TW" ? "發起討論 →" : "Start Discussion →"}
+            </Link>
+          </div>
         </TabsContent>
       </Tabs>
     </div>

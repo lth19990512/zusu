@@ -4,6 +4,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { GameHeader } from "@/components/games/game-header";
 import { BoxScoreTable } from "@/components/games/box-score-table";
 import { TeamStatsComparison } from "@/components/games/team-stats-comparison";
+import { Link } from "@/i18n/navigation";
 import type { GameSummary, BoxScore } from "@/types/api";
 
 async function fetchGame(id: string): Promise<{ game: GameSummary } | null> {
@@ -141,18 +142,18 @@ export default async function GamePage({
               {isZh ? "在社群討論這場比賽" : "Discuss this game in the community"}
             </p>
             <div className="flex gap-3 justify-center">
-              <a
-                href={`/zh-TW/posts/new?gameId=${id}`}
+              <Link
+                href={`/posts/new?gameId=${id}`}
                 className="px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-semibold hover:brightness-110 transition-all"
               >
                 {isZh ? "發起討論" : "Start Discussion"}
-              </a>
-              <a
-                href="/zh-TW/posts"
+              </Link>
+              <Link
+                href="/posts"
                 className="px-4 py-2 rounded-lg bg-secondary text-secondary-foreground text-sm font-semibold hover:bg-secondary/80 transition-colors"
               >
                 {isZh ? "查看社群" : "View Community"}
-              </a>
+              </Link>
             </div>
           </div>
         </TabsContent>

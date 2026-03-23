@@ -4,7 +4,6 @@ import { games, teams, posts, users } from "@/db/schema";
 import { eq, sql, desc, and } from "drizzle-orm";
 import { alias } from "drizzle-orm/pg-core";
 import { PlayerLeaderboard } from "@/components/shared/player-leaderboard";
-import { HeroCarousel } from "@/components/shared/hero-carousel";
 import { EmptyState } from "@/components/shared/empty-state";
 import { Link } from "@/i18n/navigation";
 
@@ -63,13 +62,72 @@ export default async function HomePage() {
   return (
     <div className="container mx-auto px-4 py-5 space-y-5">
 
-      {/* ===== HERO CAROUSEL ===== */}
-      <HeroCarousel
-        featuredGame={featuredGame}
-        topScorer={{ name: "Jayson Tatum", stat: 31.1, unit: "PPG", team: "Boston Celtics" }}
-        heroTitle={t("heroTitle")}
-        heroDescription={t("heroDescription")}
-      />
+      {/* ===== STATIC HERO ===== */}
+      <section
+        className="relative overflow-hidden rounded-2xl animate-enter"
+        style={{
+          background: "linear-gradient(135deg, #2D1B4E 0%, #4A1942 35%, #8B2E1A 70%, var(--color-primary) 100%)",
+          minHeight: 240,
+        }}
+      >
+        {/* Decorative shapes */}
+        <svg className="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 1200 400" preserveAspectRatio="xMidYMid slice">
+          <polygon points="850,0 1050,0 950,180" fill="#FF6B00" opacity="0.2" />
+          <polygon points="950,400 1200,200 1200,400" fill="#FF6B00" opacity="0.15" />
+          <polygon points="1000,0 1200,0 1200,150 1050,100" fill="#FF6B00" opacity="0.1" />
+          <polygon points="700,350 800,200 900,400" fill="#FF6B00" opacity="0.12" />
+          <polygon points="600,0 700,0 680,120 580,80" fill="#FF6B00" opacity="0.08" />
+        </svg>
+
+        <div className="relative z-10 p-6 md:p-10">
+          {featuredGame ? (
+            <div className="flex items-start gap-6 md:gap-10">
+              <div className="flex-1">
+                <div className="flex items-center gap-4 mb-1">
+                  {featuredGame.awayTeam.logoUrl && <img src={featuredGame.awayTeam.logoUrl} alt="" className="w-12 h-12 md:w-16 md:h-16 object-contain drop-shadow-lg hidden md:block" />}
+                  <h2 className="text-white font-bold uppercase leading-[0.85]" style={{ fontFamily: "var(--font-oswald), Oswald, sans-serif", fontSize: "clamp(2.2rem, 6vw, 4.5rem)" }}>
+                    {isZh ? featuredGame.awayTeam.nameZh : featuredGame.awayTeam.name}
+                  </h2>
+                </div>
+                <span className="text-primary font-bold italic text-xl md:text-2xl ml-1 block mb-1" style={{ fontFamily: "var(--font-oswald), Oswald, sans-serif" }}>vs</span>
+                <div className="flex items-center gap-4">
+                  {featuredGame.homeTeam.logoUrl && <img src={featuredGame.homeTeam.logoUrl} alt="" className="w-12 h-12 md:w-16 md:h-16 object-contain drop-shadow-lg hidden md:block" />}
+                  <h2 className="text-white font-bold uppercase leading-[0.85]" style={{ fontFamily: "var(--font-oswald), Oswald, sans-serif", fontSize: "clamp(2.2rem, 6vw, 4.5rem)" }}>
+                    {isZh ? featuredGame.homeTeam.nameZh : featuredGame.homeTeam.name}
+                  </h2>
+                </div>
+                <p className="text-white/60 text-xs md:text-sm mt-3 uppercase tracking-wider">
+                  {featuredGame.status === "final"
+                    ? `Final · ${featuredGame.awayScore} - ${featuredGame.homeScore}`
+                    : new Date(featuredGame.startTime).toLocaleString(isZh ? "zh-TW" : "en-US", { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" })}
+                </p>
+                <Link href={`/games/${featuredGame.id}`} className="inline-flex items-center gap-2 mt-4 px-5 py-2.5 rounded-full bg-primary text-white text-sm font-semibold hover:brightness-110 transition-all">
+                  {isZh ? "查看比賽數據" : "Watch Live Stats"} →
+                </Link>
+              </div>
+              <div className="hidden lg:flex flex-col items-center gap-3 pr-4">
+                {featuredGame.awayTeam.logoUrl && <img src={featuredGame.awayTeam.logoUrl} alt="" className="w-24 h-24 object-contain drop-shadow-2xl opacity-90" />}
+                {featuredGame.homeTeam.logoUrl && <img src={featuredGame.homeTeam.logoUrl} alt="" className="w-24 h-24 object-contain drop-shadow-2xl opacity-90" />}
+              </div>
+            </div>
+          ) : (
+            <div>
+              <h2 className="text-white font-bold uppercase tracking-wide leading-[0.85] mb-4" style={{ fontFamily: "var(--font-oswald), Oswald, sans-serif", fontSize: "clamp(2.5rem, 7vw, 5rem)" }}>
+                {t("heroTitle")}
+              </h2>
+              <p className="text-white/70 mb-6 max-w-lg" style={{ fontSize: "var(--font-body)" }}>{t("heroDescription")}</p>
+              <div className="flex gap-3">
+                <Link href="/teams" className="px-5 py-2.5 rounded-full bg-primary text-white text-sm font-semibold hover:brightness-110 transition-all">
+                  {isZh ? "探索球隊" : "Explore Teams"} →
+                </Link>
+                <Link href="/posts" className="px-5 py-2.5 rounded-full bg-white/15 text-white text-sm font-semibold border border-white/25 hover:bg-white/25 transition-colors">
+                  {isZh ? "加入討論" : "Join Discussion"}
+                </Link>
+              </div>
+            </div>
+          )}
+        </div>
+      </section>
 
       {/* ===== SCORES + SIDEBAR ===== */}
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-5">
@@ -141,15 +199,8 @@ export default async function HomePage() {
             </div>
           )}
 
-          {/* Bottom bar: tabs + view all */}
-          <div className="flex items-center justify-between px-5 py-3 border-t border-black/5 bg-muted/30">
-            <div className="flex gap-2">
-              {["Box Score", isZh ? "投籃圖" : "Shot Chart", isZh ? "即將開始" : "Upcoming"].map((tab, i) => (
-                <span key={tab} className={`px-3 py-1 rounded-lg text-[11px] font-medium ${i === 0 ? "bg-card border border-black/10 text-foreground" : "text-muted-foreground hover:text-foreground cursor-pointer"}`}>
-                  {tab}
-                </span>
-              ))}
-            </div>
+          {/* Bottom bar: view all */}
+          <div className="flex items-center justify-end px-5 py-3 border-t border-black/5 bg-muted/30">
             <Link href="/games" className="text-xs text-primary font-bold uppercase tracking-wider hover:underline">
               {isZh ? "全部賽事 →" : "VIEW ALL SCORES →"}
             </Link>
@@ -158,51 +209,16 @@ export default async function HomePage() {
 
         {/* Sidebar — My Team style */}
         <aside className="hidden lg:flex flex-col gap-4 animate-enter animate-enter-d2">
-          {/* My Team Card */}
-          <div className="rounded-2xl bg-card border border-black/5 p-4">
-            <div className="flex items-center justify-between mb-3">
-              <h3 className="font-bold text-sm uppercase tracking-wider" style={{ fontFamily: "var(--font-oswald), Oswald, sans-serif" }}>My Team</h3>
-              <span className="text-primary text-xs">🔥</span>
-            </div>
-
-            {/* Featured team (first team as demo) */}
-            {allTeams[0] && (
-              <Link href={`/teams/${allTeams[0].id}`}>
-                <div className="flex items-center gap-3 p-3 rounded-xl bg-primary/5 border border-primary/10 mb-3">
-                  {allTeams[0].logoUrl && <img src={allTeams[0].logoUrl} alt="" className="w-10 h-10 object-contain" />}
-                  <div>
-                    <p className="font-bold text-sm">{isZh ? allTeams[0].nameZh : allTeams[0].name}</p>
-                    <p className="text-[10px] text-muted-foreground uppercase tracking-wider">{allTeams[0].conference}</p>
-                  </div>
-                </div>
-              </Link>
-            )}
-
-            {/* Season Leaders mock */}
-            <p className="text-xs font-semibold text-muted-foreground mb-2 uppercase tracking-wider">Season Leaders</p>
-            <div className="space-y-2">
-              {[
-                { name: "LeBron", stat: "27.4", label: "PPG" },
-                { name: "Anthony", stat: "12.3", label: "RPG" },
-                { name: "D'Angelo", stat: "7.8", label: "APG" },
-              ].map((player) => (
-                <div key={player.name} className="flex items-center justify-between py-1">
-                  <div className="flex items-center gap-2">
-                    <div className="w-7 h-7 rounded-full bg-muted flex items-center justify-center text-[10px] font-bold text-muted-foreground">
-                      {player.name[0]}
-                    </div>
-                    <span className="text-xs font-medium">{player.name}</span>
-                  </div>
-                  <div className="text-right">
-                    <span className="text-sm font-bold" style={{ fontFamily: "var(--font-oswald), Oswald, sans-serif" }}>{player.stat}</span>
-                    <span className="text-[9px] text-muted-foreground ml-1">{player.label}</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            <Link href="/games" className="mt-3 block text-center py-2 rounded-lg border border-primary text-primary text-xs font-bold uppercase tracking-wider hover:bg-primary/5 transition-colors">
-              {isZh ? "查看全部賽事" : "VIEW ALL SCORES"}
+          {/* Choose Your Team CTA */}
+          <div className="rounded-2xl bg-card border border-black/5 p-5 text-center">
+            <h3 className="font-bold text-sm mb-2" style={{ fontFamily: "var(--font-oswald), Oswald, sans-serif" }}>
+              {isZh ? "你的主隊" : "Your Team"}
+            </h3>
+            <p className="text-xs text-muted-foreground mb-4">
+              {isZh ? "選一支球隊，開始你的主場" : "Pick a team, start your court"}
+            </p>
+            <Link href="/profile" className="inline-block px-4 py-2 rounded-lg bg-primary text-primary-foreground text-xs font-bold uppercase tracking-wider hover:brightness-110 transition-all">
+              {isZh ? "選擇主隊 →" : "Choose Team →"}
             </Link>
           </div>
 
@@ -235,10 +251,8 @@ export default async function HomePage() {
 
       {/* ===== BOTTOM: Leaderboard + News ===== */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 animate-enter animate-enter-d3">
-        {/* Player Leaderboard */}
-        <section className="rounded-2xl bg-card border border-black/5 p-5">
-          <PlayerLeaderboard />
-        </section>
+        {/* Player Leaderboard — only renders if data exists */}
+        <PlayerLeaderboard />
 
         {/* News & Social */}
         <section className="rounded-2xl bg-card border border-black/5 p-5">
