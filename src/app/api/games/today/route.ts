@@ -5,6 +5,8 @@ import { sql, eq } from "drizzle-orm";
 import { alias } from "drizzle-orm/pg-core";
 import { getOrSet } from "@/lib/redis";
 
+export const dynamic = "force-dynamic";
+
 const homeTeams = alias(teams, "homeTeams");
 const awayTeams = alias(teams, "awayTeams");
 
